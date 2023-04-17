@@ -1,48 +1,57 @@
-# The Retail React App
+# Bolt Quick Start for Composable Commerce
 
-A project template that includes an isomorphic JavaScript storefront and [Progressive Web App](https://developer.mozilla.org/en-US/docs/Web/Progressive_web_apps) built using [React](https://reactjs.org/) and [Express](https://expressjs.com/). It uses a modern headless architecture that enables developers to decouple front-end code from back-end systems. It leverages popular open-source libraries in the React ecosystem, such as [Chakra UI](https://chakra-ui.com/) components, [Emotion](https://emotion.sh/docs/introduction) (CSS-in-JS), [Webpack](https://webpack.js.org/), and many more.
+## Bolt's Checkout Package
 
-Developers don’t have to worry about the underlying infrastructure, whether they’re developing their app locally, deploying it to a [Managed Runtime](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/mrt-overview.html) environment, or testing the app live.
+This project adds Bolt's Managed Checkout Package to the SFCC PWA Starter Kit. This is Bolt's most comprehensive  integartion, where the Bolt-hosted modal renders the full end-to-end checkout experience. The following features are included out of the box: 
+- Access to the Bolt Account Network (~17 Million Shopper Accounts) that power a one-click checkout experience
+- Passwordless authentication to recognize returning shoppers.
+- A fully optimized checkout experience that includes Address Verification, Address Auto-Complete
+- Native SFCC integrations for Shipping, Tax, Coupons, Order Creation, etc.
+- Integrations with Alternative Payment Methods (PayPal, GooglePay, ApplePay, Klarna, AfterPay, ZipPay, etc)
+- A rich collection of no-code configurable checkout settings. 
 
-## Requirements
+## PWA Integrations Details
 
--   Node 14
--   npm 6.14.4 or later
+### Bolt Code Additions
+This repo includes two new files with the PWA Starter App:
 
-## Get Started
+1. A BoltButton component
+2. A Custom Hook to load external scripts 
 
-To start your web server for local development, run the following command in your project directory:
+These are located in the `/app/bolt/` directory.
 
-```bash
-npm start
-```
+The `BoltButton` Component is used in the following files in the PWA Starter Kit: 
+- `app/pages/cart/partials/cart-cta.jsx`
+- `app/hooks/use-add-to-cart-modal.js`
 
-Now that the development server is running, you can open a browser and preview your commerce app:
 
--   Go to http://localhost:3000/
+### BoltButton Component
+The `BoltButton` Component is defined in `/app/bolt/components/bolt-button.jsx`
 
-## Localization
+The `BoltButton` Component uses a custom hook, defined in `/app/bolt/hooks/useExternalScripts`, to embed Bolt's Frontend JavaScript in the head of the DOM. 
 
-See the [Localization README.md](./app/translations/README.md) for important setup instructions for localization.
+After Bolt's Frontend JS is initialized, the `BoltButton` component invokes the `BoltCheckout.configure` passing the JWT to Bolt's Backend. 
 
-## Configuration Files
+The Bolt Button renders the Bolt Checkout button. 
 
-The Retail React App's configuration files are located in the `app/config` folder. For more details, see [Configuration Files](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/configuration-options.html) in the documentation.
+![](/diagrams/checkout-init.png)
 
-## Documentation
+### Checkout Flow. 
+Once a shopper launches the Bolt Checkout iFrame, Bolt handles the communication with SFCC on our backend via OCAPI endpoints. 
 
-The full documentation for PWA Kit and Managed Runtime is hosted on the [Salesforce Developers](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/overview) portal.
+![](/diagrams/checkout-shipping-and-tax.png)
 
-### Useful Links:
+![](/diagrams/checkout-create-order-and-auth.png)
 
--   [Get Started](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/getting-started.html)
--   [Skills for Success](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/skills-for-success.html)
--   [Set Up API Access](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/setting-up-api-access.html)
--   [Configuration Options](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/configuration-options.html)
--   [Proxy Requests](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/proxying-requests.html)
--   [Push and Deploy Bundles](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/pushing-and-deploying-bundles.html)
--   [The Retail React App](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/retail-react-app.html)
--   [Rendering](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/rendering.html)
--   [Routing](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/routing.html)
--   [Phased Headless Rollouts](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/phased-headless-rollouts.html)
--   [Launch Your Storefront](https://developer.salesforce.com/docs/commerce/pwa-kit-managed-runtime/guide/launching-your-storefront.html)
+
+## SFRA Cartridge - Shared Integration Compontents 
+The implementation of Bolt in the PWA uses the same SFCC backend as Bolt's SFRA Catridge. You can find the [Bolt Cartridge on the Appexchange](https://appexchange.salesforce.com/listingDetail?listingId=a0N4V00000Jx53PUAR&tab=e). Refer to [Bolt's SFRA Cartridge Integration Docs](https://help.bolt.com/products/checkout/sfcc-sfra-v2/installation/) for integration instructions.  
+- Define web services and custom attributes via xml metadata imports
+- Define the configuration settings in the Merchant Preferences in Business Manager
+- Grant Bolt Access in Account Manager
+- Specify the resources that Bolt can access via OCAPI 
+
+## Open Issues / Next Steps
+1. The current solution hard codes the Bolt Publishable key into into the Bolt Component. Technically this is fine, since the Bolt Publishable Key is not an API secret and is shared over the network. However, this be set dynamically via a configuration object (ideally pulled in from the Custom Bolt Merchant Preferences configured in Business Manager). 
+
+2. The redirect to the native PWA CheckoutConfirmation.jsx has not yet been tested. In initial tests, we have used a [Bolt-hosted Order Confirmation page](https://help.bolt.com/add-ons/confirmation-page/) (an optional checkout add-on product that some merchants use).
