@@ -2,10 +2,10 @@
 
 ## Bolt's Checkout Package
 
-This project adds Bolt's Managed Checkout Package to the SFCC PWA Starter Kit. This is Bolt's most comprehensive  integartion, where the Bolt-hosted modal renders the full end-to-end checkout experience. The following features are included out of the box: 
-- Access to the Bolt Account Network (~17 Million Shopper Accounts) that power a one-click checkout experience
+This project adds Bolt's Managed Checkout Package to the SFCC PWA Starter Kit. This is Bolt's most comprehensive  integration. After selecting the checkout button, a Bolt-hosted checkout modal provides the full end-to-end checkout experience. The following features are included out of the box: 
+- Access to the Bolt Account Network (~17 Million Shopper Accounts) that power a one-click checkout experience for logged in shoppers. 
 - Passwordless authentication to recognize returning shoppers.
-- A fully optimized checkout experience that includes Address Verification, Address Auto-Complete
+- A fully optimized checkout experience that includes Address Verification, Address Auto-Complete, form validation, etc.
 - Native SFCC integrations for Shipping, Tax, Coupons, Order Creation, etc.
 - Integrations with Alternative Payment Methods (PayPal, GooglePay, ApplePay, Klarna, AfterPay, ZipPay, etc)
 - A rich collection of no-code configurable checkout settings. 
